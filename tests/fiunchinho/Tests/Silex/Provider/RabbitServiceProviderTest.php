@@ -151,15 +151,15 @@ class RabbitServiceProviderTest extends \PHPUnit_Framework_TestCase
             'default' => [
                 'host' => 'localhost',
                 'port' => 5672,
-                'user' => 'guest',
-                'password' => 'guest',
+                'user' => 'admin',
+                'password' => 'mestre',
                 'vhost' => '/'
             ],
             'another' => [
                 'host' => 'localhost',
                 'port' => 5672,
-                'user' => 'guest',
-                'password' => 'guest',
+                'user' => 'admin',
+                'password' => 'mestre',
                 'vhost' => '/'
             ]
         ];
