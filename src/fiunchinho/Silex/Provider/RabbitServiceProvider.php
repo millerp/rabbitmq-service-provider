@@ -10,14 +10,14 @@ use OldSound\RabbitMqBundle\RabbitMq\RpcClient;
 use OldSound\RabbitMqBundle\RabbitMq\RpcServer;
 use PhpAmqpLib\Connection\AMQPConnection;
 use PhpAmqpLib\Connection\AMQPLazyConnection;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class RabbitServiceProvider implements ServiceProviderInterface
 {
     const DEFAULT_CONNECTION = 'default';
 
-    public function register(Application $app)
+    public function register(Container $app)
     {
         $this->loadConnections($app);
         $this->loadProducers($app);
@@ -28,15 +28,15 @@ class RabbitServiceProvider implements ServiceProviderInterface
         $this->loadRpcServers($app);
     }
 
-    public function boot(Application $app)
+    public function boot(Container $app)
     {
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      * @throws \InvalidArgumentException
      */
-    private function loadConnections(Application $app)
+    private function loadConnections(Container $app)
     {
         $app['rabbit.connection'] = $app->share(function ($app) {
             if (!isset($app['rabbit.connections'])) {
@@ -82,15 +82,15 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      * @param array $options
      * @param array $connections
      * @return AMQPLazyConnection|AMQPConnection
      * @throws \InvalidArgumentException
      */
-    private function getConnection(Application $app, $options, $connections)
+    private function getConnection(Container $app, $options, $connections)
     {
-        $connection_name = $options['connection']?: self::DEFAULT_CONNECTION;
+        $connection_name = $options['connection'] ?: self::DEFAULT_CONNECTION;
 
         if (!isset($connections[$connection_name])) {
             throw new \InvalidArgumentException('Configuration for connection [' . $connection_name . '] not found');
@@ -100,9 +100,9 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadProducers(Application $app)
+    private function loadProducers(Container $app)
     {
         $app['rabbit.producer'] = $app->share(function ($app) {
             if (!isset($app['rabbit.producers'])) {
@@ -135,9 +135,9 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadConsumers(Application $app)
+    private function loadConsumers(Container $app)
     {
         $app['rabbit.consumer'] = $app->share(function ($app) {
             if (!isset($app['rabbit.consumers'])) {
@@ -145,7 +145,7 @@ class RabbitServiceProvider implements ServiceProviderInterface
             }
 
             $consumers = [];
-            
+
             foreach ($app['rabbit.consumers'] as $name => $options) {
                 $connection = $this->getConnection($app, $options, $app['rabbit.connections']);
                 $consumer = new Consumer($connection);
@@ -177,9 +177,9 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadAnonymousConsumers(Application $app)
+    private function loadAnonymousConsumers(Container $app)
     {
         $app['rabbit.anonymous_consumer'] = $app->share(function ($app) {
             if (!isset($app['rabbit.anon_consumers'])) {
@@ -202,9 +202,9 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadMultipleConsumers(Application $app)
+    private function loadMultipleConsumers(Container $app)
     {
         $app['rabbit.multiple_consumer'] = $app->share(function ($app) {
             if (!isset($app['rabbit.multiple_consumers'])) {
@@ -247,13 +247,13 @@ class RabbitServiceProvider implements ServiceProviderInterface
 
             return $consumers;
         });
-        
+
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadRpcClients(Application $app)
+    private function loadRpcClients(Container $app)
     {
         $app['rabbit.rpc_client'] = $app->share(function ($app) {
             if (!isset($app['rabbit.rpc_clients'])) {
@@ -278,9 +278,9 @@ class RabbitServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Application $app
+     * @param Container $app
      */
-    private function loadRpcServers(Application $app)
+    private function loadRpcServers(Container $app)
     {
         $app['rabbit.rpc_server'] = $app->share(function ($app) {
             if (!isset($app['rabbit.rpc_servers'])) {
@@ -308,6 +308,6 @@ class RabbitServiceProvider implements ServiceProviderInterface
 
             return $servers;
         });
-        
+
     }
 }

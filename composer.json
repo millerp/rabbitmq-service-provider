@@ -1,30 +1,45 @@
 {
-    "name": "e-sixt/rabbitmq-service-provider",
-    "replace": {
-        "fiunchinho/rabbitmq-service-provider": "1.0.1"
+  "name": "millerp/rabbitmq-service-provider",
+  "type": "silex-service-provider",
+  "description": "Silex service provider for RabbitMQ. Integrates php-amqplib/rabbitmq-bundle into Silex.",
+  "keywords": [
+    "silex",
+    "provider",
+    "rabbitmq",
+    "amqp",
+    "message",
+    "queue"
+  ],
+  "homepage": "https://github.com/e-sixt/rabbitmq-service-provider",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Anton Stöckl"
     },
-    "type": "silex-service-provider",
-    "description": "Silex service provider for RabbitMQ. Integrates php-amqplib/rabbitmq-bundle into Silex.",
-    "keywords": [ "silex", "provider", "rabbitmq", "amqp", "message", "queue" ],
-    "homepage": "https://github.com/e-sixt/rabbitmq-service-provider",
-    "license": "MIT",
-    "authors": [
-        {"name": "Anton Stöckl"},
-        {"name": "Jose Armesto"}
-    ],
-    "require": {
-        "php": ">=5.5.0",
-        "silex/silex": "~1.3",
-        "php-amqplib/rabbitmq-bundle": "~1.9",
-        "ivoba/console-service-provider": "~2.0"
+    {
+      "name": "Jose Armesto"
     },
-    "require-dev": {
-        "phpunit/phpunit": "~4.8"
-    },
-    "autoload": {
-        "psr-4": { "fiunchinho\\": "src/fiunchinho" }
-    },
-    "autoload-dev" : {
-        "psr-4": { "fiunchinho\\Tests\\" : "tests/fiunchinho/Tests" }
+    {
+      "name": "Miller P. Magalhaes"
     }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "silex/silex": "^2.0",
+    "php-amqplib/rabbitmq-bundle": "~1.9",
+    "ivoba/console-service-provider": "~3.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "fiunchinho\\": "src/fiunchinho"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "fiunchinho\\Tests\\": "tests/fiunchinho/Tests"
+    }
+  }
 }
