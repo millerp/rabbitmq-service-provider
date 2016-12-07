@@ -4,12 +4,13 @@ namespace fiunchinho\Silex\Command;
 
 use OldSound\RabbitMqBundle\RabbitMq\Consumer as RabbitConsumer;
 use Silex\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Consumer
+class Consumer extends Command
 {
     /** @var int */
     private $amount;
@@ -17,8 +18,14 @@ class Consumer
     /** @var RabbitConsumer */
     private $consumer;
 
+    /**
+     * @var Application
+     */
     private $app;
 
+    /**
+     *
+     */
     protected function configure()
     {
         $this
@@ -27,14 +34,13 @@ class Consumer
             ->addOption('messages', 'm', InputOption::VALUE_OPTIONAL, 'Messages to consume', 0)
             ->addOption('route', 'r', InputOption::VALUE_OPTIONAL, 'Routing Key', '')
             ->addOption('memory-limit', 'l', InputOption::VALUE_OPTIONAL, 'Allowed memory for this process', null)
-            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging')
-        ;
+            ->addOption('debug', 'd', InputOption::VALUE_NONE, 'Enable Debugging');
     }
 
     /**
      * Executes the current command.
      *
-     * @param InputInterface  $input  An InputInterface instance
+     * @param InputInterface $input An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
      * @return integer 0 if everything went fine, or an error code
@@ -45,7 +51,7 @@ class Consumer
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (defined('AMQP_DEBUG') === false) {
-            define('AMQP_DEBUG', (bool) $input->getOption('debug'));
+            define('AMQP_DEBUG', (bool)$input->getOption('debug'));
         }
 
         $this->amount = $input->getOption('messages');
@@ -63,12 +69,20 @@ class Consumer
         $this->consumer->consume($this->amount);
     }
 
+    /**
+     * @param InputInterface $input
+     * @return mixed
+     */
     protected function getConsumerInstance(InputInterface $input)
     {
-    	$app = $this->app;
-    	return $app['rabbit.consumer'][$input->getArgument('name')];
+        $app = $this->app;
+
+        return $app['rabbit.consumer'][$input->getArgument('name')];
     }
 
+    /**
+     * @param Application $app
+     */
     public function setSilexApplication(Application $app)
     {
         $this->app = $app;
